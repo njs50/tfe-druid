@@ -146,7 +146,7 @@ send('queue cast landwalk &amp; cast landbinding')</script>
 				<integer>1</integer>
 			</regexCodePropertyList>
 		</Trigger>
-		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+		<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>autohide</name>
 			<script>local hiding = table.contains(gmcp.Char.Status.flags, 'hiding')
 local fighting = #table.keys(gmcp.Char.Fighting) &gt; 0
@@ -817,7 +817,7 @@ end</script>
 
 druid.aug.createdItem = common.dotCase(common.itemSanitize(matches[2]))
 
-if (matches[3] == 'leaving it') then
+if (matches[4] == 'leaving it') then
   send('tell ' .. druid.aug.vic .. ' looks like your reagent was consumed :-[')
 end
 
@@ -865,6 +865,32 @@ send('tell ' .. druid.aug.vic .. ' ' .. matches[1])
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^Your druidic senses feel that something is missing...  (.*).</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Nothing found matching "gem bright".</name>
+				<script>
+
+if druid.aug and druid.aug.item and target == druid.aug.item then
+  local target = rex.gsub(druid.aug.item,[[\.]]," ")
+  send('tell ' .. druid.aug.vic .. ' looks like you told me to augment something i don\'t have')
+  send('tell ' .. druid.aug.vic .. ' ' .. matches[1])
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Nothing found matching "(.*)"\.</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -1063,13 +1089,59 @@ expandAlias('respell')</script>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>kick/swim while no improve casts queued</name>
 			<script>-- local cmd = 'queue dive pool'
-local cmd = 'kick board &amp; kick board'
+local cmd = 'queue kick stand &amp; queue kick stand'
 if (#improves.castQueue == 0) then
   send(cmd)
+else
+  
+  if (improves.castFillerLastTick ~= false) then
+    improves.castFillerLastTick = false
+    tempTimer(65, function()
+      send('+')
+      murder.smokeUp('nowis','imps', 22, function()
+        improves.castSpell()
+        send('wait 3')
+      end)
+    end)
+  end
 end</script>
 			<command></command>
 			<packageName></packageName>
-			<time>00:00:01.000</time>
+			<time>00:00:01.100</time>
+		</Timer>
+		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<name>cast improve spell w/tobacco</name>
+			<script>-- local cmd = 'queue dive pool'
+
+cecho('\n\ncasting queued spell if exists!\n\n')
+
+if (#improves.castQueue == 0) then
+  -- improves.castSpell() 
+else
+
+  if (improves.castFillerLastTick) then
+    
+    improves.castSpell()
+  
+  else
+
+    murder.smokeUp('nowis','imps', 22, function()
+      improves.castSpell() 
+    end)
+    
+  end
+  
+end</script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:45.100</time>
+		</Timer>
+		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<name>cast improve spell</name>
+			<script>send(improves.getImproveSpell())</script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:01:05.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>drink cauldron + smoke</name>
@@ -1080,20 +1152,21 @@ local timer = 'kick/swim while no improve casts queued'
 disableTimer(timer)
 
 
-send('west &amp; queue drink soup &amp; queue drink soup &amp; east ')
+send('drink cauldron')
 
 murder.checkPracs(function(pracs)
 
-  if (pracs &gt; 300) then
+  if (pracs &gt; 150) then
     cecho('\n\nto many pracs!\n\n')
     -- send('cstat got to 300 prac points, quitting for now...')
     -- send('quit')
     return
   else  
     cecho('\n&lt;green&gt;IMPROVE BOT:&lt;white&gt; acquired ' .. tostring(pracs) .. ' prac points so far\n\n')
-    -- murder.smokeUp('imps','imps', 12, function()
+    murder.smokeUp('nowis','imps', 12, function()
       enableTimer(timer)
-    -- end)
+    end)
+    
   end
 
 end)
@@ -1104,11 +1177,11 @@ end)
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>respell - improve buffs</name>
-			<script>
+			<script>cecho('\n\nchecking buffs!\n\n')
 njs50.respell(player.buffs, {queueSpellImprove = true})</script>
 			<command></command>
 			<packageName></packageName>
-			<time>00:00:30.000</time>
+			<time>00:01:00.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve bandage</name>
@@ -1146,7 +1219,7 @@ end)</script>
 
 if (#improves.castQueue &gt; 0) then
 
-  murder.smokeUp('imps','imps', 20, function()
+  murder.smokeUp('nowis','imps', 22, function()
     tempTimer(3,function()
       improves.castSpell()
       -- send('sit couch &amp; sleep')
@@ -1154,19 +1227,12 @@ if (#improves.castQueue &gt; 0) then
   end)
   
 else
-  -- improves.castSpell()
+  improves.castSpell()
   -- send('sit couch &amp; sleep')
 end</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:35.000</time>
-		</Timer>
-		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>cast improve spell</name>
-			<script>send(improves.getImproveSpell())</script>
-			<command></command>
-			<packageName></packageName>
-			<time>00:01:05.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve dowse</name>
@@ -1389,7 +1455,7 @@ end)</script>
 			<packageName></packageName>
 			<regex>^(sl|rest)$</regex>
 		</Alias>
-		<Alias isActive="yes" isFolder="no">
+		<Alias isActive="no" isFolder="no">
 			<name>stand</name>
 			<script>druid.stand()</script>
 			<command></command>
@@ -1412,7 +1478,7 @@ if (common.checkFullTimer) then
 	common.checkFullTimer = nil
 end
 
-mojune.stand(function ()
+druid.stand(function ()
 	send('gstat Ready (' .. player.name .. ')')
 	druid.reportMana()
 end)
@@ -2089,7 +2155,7 @@ player.postStormCheck = function(cb, options)
               
                 cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; getting full mana (once any storms end)\n')
                 player.ss.onStormDone(function()
-                  mojune.getFull(cb)
+                  druid.getFull(cb)
                 end)
               
               else
