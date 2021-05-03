@@ -32,7 +32,7 @@
 send('empty ' .. player.vessel)
 
 if (matches[2] ~= '') then
-send('fill ' .. player.vessel .. ' ' .. matches[2])
+  send('fill ' .. player.vessel .. ' ' .. matches[2])
 else
 
   send('fill ' .. player.vessel .. ' soup')
@@ -146,7 +146,7 @@ send('queue cast landwalk &amp; cast landbinding')</script>
 				<integer>1</integer>
 			</regexCodePropertyList>
 		</Trigger>
-		<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>autohide</name>
 			<script>local hiding = table.contains(gmcp.Char.Status.flags, 'hiding')
 local fighting = #table.keys(gmcp.Char.Fighting) &gt; 0
@@ -227,7 +227,8 @@ end</script>
 		</Trigger>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>darklight</name>
-			<script>common.getManaAndCast(50, 'darklight', '', true)
+			<script>cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; recasting darklight\n\n')
+common.getManaAndCast(50, 'darklight', '', true)
 
 
 -- You can no longer sense your surroundings without light.</script>
@@ -458,7 +459,7 @@ end
 			<colorTriggerBgColor>#000000</colorTriggerBgColor>
 			<regexCodeList />
 			<regexCodePropertyList />
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>A grain of sand lies almost invisible on the ground.</name>
 				<script>send('get sand &amp; put 2.sand ' .. player.pack)</script>
 				<triggerType>0</triggerType>
@@ -872,12 +873,15 @@ send('tell ' .. druid.aug.vic .. ' ' .. matches[1])
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>Nothing found matching "gem bright".</name>
-				<script>
+				<script>if (druid and druid.aug and druid.aug.item) then
+  
+  local target = druid.aug.item:gsub("\."," ")
+  
+  if matches[2] == druid.aug.item then
+    send('tell ' .. druid.aug.vic .. ' looks like you told me to augment something i don\'t have')
+    send('tell ' .. druid.aug.vic .. ' ' .. matches[1])
+  end
 
-if druid.aug and druid.aug.item and target == druid.aug.item then
-  local target = rex.gsub(druid.aug.item,[[\.]]," ")
-  send('tell ' .. druid.aug.vic .. ' looks like you told me to augment something i don\'t have')
-  send('tell ' .. druid.aug.vic .. ' ' .. matches[1])
 end</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
@@ -1890,7 +1894,7 @@ end</script>
 			<script>druid = druid or {}
 
 druid.reportMana = function ()
-	local pdata = group[player.name]
+	local pdata = group.data[player.name]
   local manaPct = math.ceil((pdata.mp / pdata.mp_max * 100))
   local cmd = 'gstat mana at ' .. tostring(manaPct) .. '%'
   if (player.stormSpell and player.stormSpell ~= '') then
@@ -2001,7 +2005,7 @@ druid.getFull = function (callback)
   if (not (player.gettingFull and player.position == 'sleeping')) then 
     player.gettingFull = true
     
-    if ((group[player.name].hp_max - group[player.name].hp) &gt; 125) then
+    if ((group.data[player.name].hp_max - group.data[player.name].hp) &gt; 125) then
       send('cast ' .. player.healSpell)
     end
 
@@ -2211,8 +2215,8 @@ druid.makeItRain = function(options)
       -- display(name, group[name].hp_max - group[name].hp)
       -- require at least 60% hp
       if (
-        ((group[name].hp_max - group[name].hp) &gt; options.skipAmount) or
-        (group[name].hp / group[name].hp_max &lt; 0.6)
+        ((group.data[name].hp_max - group.data[name].hp) &gt; options.skipAmount) or
+        (group.data[name].hp / group.data[name].hp_max &lt; 0.6)
       ) then
         canSkip = false
       end
