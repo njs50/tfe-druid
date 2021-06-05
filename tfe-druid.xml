@@ -2,6 +2,249 @@
 <!DOCTYPE MudletPackage>
 <MudletPackage version="1.001">
 	<TriggerPackage>
+		<TriggerGroup isActive="no" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>spell improve path</name>
+			<script></script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>saw combat</name>
+				<script>improves = improves or {}
+improves.sawAction = true
+cecho('\n\n&lt;green&gt;IMPROVES: &lt;white&gt;saw some action!\n\n')
+
+
+if (improves.actionRelease) then
+  killTimer(improves.actionRelease)
+end
+
+improves.actionRelease = tempTimer(20, function()
+  improves.actionRelease = nil
+  improves.sawAction = nil
+end)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^You receive \d+ experience points\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Your x (didn't cast)</name>
+				<script>send('k')</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Your</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>falls asleep - murder mode</name>
+				<script>local vic = common.dotCase(common.toMurderString(matches[3]))
+
+-- reminder to check murder.resume() clears a murder.pause() timer on moju
+-- also that a second murder.pause doesn't start a second timer?
+send(improves.getImproveSpell() .. ' ' ..  vic)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^(A|An|The) (.*) drops .* asleep\.</string>
+					<string>^(A|An|The) (.*) slips deeper into slumber\.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>You begin casting</name>
+				<script>if (matches[2] ~= 'sleep') then
+  send(improves.getImproveSpell())
+end</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You begin casting (\w+)</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>mists fail</name>
+				<script>send('cast mists')</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>Casting mists of sleep requires no target.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>Casting x requires no target</name>
+				<script>local spell = matches[2]
+
+disableTrigger('Casting x requires no target')
+
+send('cast ' .. spell)
+
+tempTimer(2, function()
+  send('prep ' .. spell)
+end)
+
+tempTimer(20, function()
+  enableTrigger('Casting x requires no target')
+end)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^Casting (.*) requires no target\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>You dont have x prepared</name>
+				<script>local spell = matches[2]
+
+disableTrigger('You dont have x prepared')
+
+send('prep ' .. spell)
+send('queue cast ' .. spell)
+
+tempTimer(20, function()
+  enableTrigger('You dont have x prepared')
+end)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^You don't have (.*) prepared\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>need mana for tempest</name>
+				<script>disableTrigger('need mana for tempest')
+tempTimer(10, function()
+  enableTrigger('need mana for tempest')
+  send('prep tempest')
+end)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^You need \w+ energy points to prepare tempest\.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>x's size makes it easy for it to avoid the thick vines.</name>
+				<script>tempTimer(3, function()
+  send('cast undergrowth')
+end)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>avoid the thick vines\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+		</TriggerGroup>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>drink from puddles</name>
 			<script></script>
@@ -148,65 +391,78 @@ send('queue cast landwalk &amp; cast landbinding')</script>
 		</Trigger>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>autohide</name>
-			<script>local hiding = table.contains(gmcp.Char.Status.flags, 'hiding')
-local fighting = #table.keys(gmcp.Char.Fighting) &gt; 0
-local cantHide = false
-
--- no hiding in the soup room or safe rooms
-if (gmcp.Room.Info.vnum == 170 or table.contains(gmcp.Room.Info.flags, 'safe')) then
-  cantHide = true
-  if (hiding) then 
-    send('unhide')
-  end
-end
-
--- no need to hide in safe rooms
-
-
--- display(hiding,fighting,cantHide)
-
--- make sure we have checked out equip before autohide is enabled
-if (player and player.gear) then
+			<script>if (gmcp and gmcp.Room and gmcp.Room.Info) then
   
-  if (player.gear.feet and player.gear.feet.base and player.gear.feet.base.item == 'ivory boots') then
+  local hiding = table.contains(gmcp.Char.Status.flags, 'hiding')
+  local fighting = #table.keys(gmcp.Char.Fighting) &gt; 0
+  local cantHide = false
+  
+  local noHideRooms = {
+    ['170'] = true,
+    ['107'] = true,
+    ['5117'] = true,
+    ['5113'] = true,
+  }
+  
+  
+  -- no hiding in the soup room or safe rooms
+  if (gmcp.Char.Status.position ~= 'sleeping' and (noHideRooms[tostring(gmcp.Room.Info.vnum)] or table.contains(gmcp.Room.Info.flags, 'safe'))) then
     cantHide = true
+    if (hiding) then 
+      send('unhide')
+    end
   end
   
-  if (player.gear.body and player.gear.body.over and player.gear.body.over.item == 'cloak of flames') then
-    cantHide = true
+  -- no need to hide in safe rooms
+  
+  
+  -- display(hiding,fighting,cantHide)
+  
+  -- make sure we have checked out equip before autohide is enabled
+  if (player and player.gear) then
+    
+    if (player.gear.feet and player.gear.feet.base and player.gear.feet.base.item == 'ivory boots') then
+      cantHide = true
+    end
+    
+    if (player.gear.body and player.gear.body.over and 
+      (player.gear.body.over.item == 'cloak of flames' or player.gear.body.over.item == 'engemmed fiery red cloak')
+    ) then
+      cantHide = true
+    end
+    
+    if (player.gear["right wrist"] and player.gear["right wrist"].base and player.gear["right wrist"].base.item == "rune-inscripted snakeskin bracer") then
+      cantHide = true
+    end  
+    
+    if (player.gear["left wrist"] and player.gear["left wrist"].base and player.gear["left wrist"].base.item == "rune-inscripted snakeskin bracer") then
+      cantHide = true
+    end  
+    
+    if (gmcp.Char.Status.position == 'sleeping' or
+        gmcp.Char.Status.position == 'wading' or
+        gmcp.Char.Status.position == 'resting' or
+        gmcp.Char.Status.position == 'mounted' or
+        gmcp.Char.Status.position == 'swimming'
+    ) then
+      cantHide = true
+    end
+    
+    if (player.unhide == true) then
+      cantHide = true
+    end
+    
+    
+    if (not hiding and not fighting and not cantHide) then
+      cecho('\n&lt;green&gt;AUTOHIDE:&lt;white&gt; time to hide!')
+      send('hide')
+      disableTrigger('autohide')
+      tempTimer(1.5, function()
+        enableTrigger('autohide')
+      end, 'disable autohide')
+    end
+  
   end
-  
-  if (player.gear["right wrist"] and player.gear["right wrist"].base and player.gear["right wrist"].base.item == "rune-inscripted snakeskin bracer") then
-    cantHide = true
-  end  
-  
-  if (player.gear["left wrist"] and player.gear["left wrist"].base and player.gear["left wrist"].base.item == "rune-inscripted snakeskin bracer") then
-    cantHide = true
-  end  
-  
-  if (gmcp.Char.Status.position == 'sleeping' or
-      gmcp.Char.Status.position == 'wading' or
-      gmcp.Char.Status.position == 'resting' or
-      gmcp.Char.Status.position == 'mounted' or
-      gmcp.Char.Status.position == 'swimming'
-  ) then
-    cantHide = true
-  end
-  
-  if (player.unhide == true) then
-    cantHide = true
-  end
-  
-  
-  if (not hiding and not fighting and not cantHide) then
-    cecho('\n&lt;green&gt;AUTOHIDE:&lt;white&gt; time to hide!')
-    send('hide')
-    disableTrigger('autohide')
-    tempTimer(1.5, function()
-      enableTrigger('autohide')
-    end, 'disable autohide')
-  end
-
 end</script>
 			<triggerType>0</triggerType>
 			<conditonLineDelta>0</conditonLineDelta>
@@ -1006,28 +1262,6 @@ druid.reportMana()</script>
 			</regexCodePropertyList>
 		</Trigger>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-			<name>respell</name>
-			<script>expandAlias('respell gstat')</script>
-			<triggerType>0</triggerType>
-			<conditonLineDelta>0</conditonLineDelta>
-			<mStayOpen>0</mStayOpen>
-			<mCommand></mCommand>
-			<packageName></packageName>
-			<mFgColor>#ff0000</mFgColor>
-			<mBgColor>#ffff00</mBgColor>
-			<mSoundFile></mSoundFile>
-			<colorTriggerFgColor>#000000</colorTriggerFgColor>
-			<colorTriggerBgColor>#000000</colorTriggerBgColor>
-			<regexCodeList>
-				<string>^.* reports? group status[^:]*:\s+"respell"$</string>
-				<string>^.* tells? the group[^:]*:\s+"respell"$</string>
-			</regexCodeList>
-			<regexCodePropertyList>
-				<integer>1</integer>
-				<integer>1</integer>
-			</regexCodePropertyList>
-		</Trigger>
-		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>xerotes</name>
 			<script>gmcp.Room.Info.wind = 'storm'</script>
 			<triggerType>0</triggerType>
@@ -1080,6 +1314,28 @@ send('observe')
 				<integer>1</integer>
 			</regexCodePropertyList>
 		</Trigger>
+		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>assist changed</name>
+			<script>send('gstat assist set to: ' .. matches[2])</script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList>
+				<string>^You will auto.assist with (.*)\.</string>
+				<string>^Your auto.assist skill has been set to (none)\.$</string>
+			</regexCodeList>
+			<regexCodePropertyList>
+				<integer>1</integer>
+				<integer>1</integer>
+			</regexCodePropertyList>
+		</Trigger>
 	</TriggerPackage>
 	<TimerPackage>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
@@ -1092,7 +1348,7 @@ expandAlias('respell')</script>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>kick/swim while no improve casts queued</name>
-			<script>-- local cmd = 'queue dive pool'
+			<script>-- local cmd = 'queue dive pool &amp; queue climb chain'
 local cmd = 'queue kick stand &amp; queue kick stand'
 if (#improves.castQueue == 0) then
   send(cmd)
@@ -1102,11 +1358,11 @@ else
     improves.castFillerLastTick = false
     tempTimer(65, function()
       send('+')
-      murder.smokeUp('nowis','imps', 22, function()
+      murder.smokeUp('imps-no-wis','imps', 12, function()
         improves.castSpell()
         send('wait 3')
       end)
-    end)
+    end, 'casting buff delay')
   end
 end</script>
 			<command></command>
@@ -1115,13 +1371,10 @@ end</script>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>cast improve spell w/tobacco</name>
-			<script>-- local cmd = 'queue dive pool'
+			<script>cecho('\n&lt;white&gt;Improve - halftick\n')
+send('stand')
 
-cecho('\n\ncasting queued spell if exists!\n\n')
-
-if (#improves.castQueue == 0) then
-  -- improves.castSpell() 
-else
+if (#improves.castQueue &gt; 0) then
 
   if (improves.castFillerLastTick) then
     
@@ -1129,13 +1382,19 @@ else
   
   else
 
-    murder.smokeUp('nowis','imps', 22, function()
+    murder.smokeUp('imps-no-wis','imps', 22, function()
+      local message = '[improves] : ' .. improves.castQueue[1]
+      common.consoleMessage('Log', message, 'green', true)
       improves.castSpell() 
     end)
     
   end
   
-end</script>
+else
+  improves.castSpell()
+  -- send('sit couch &amp; sleep')
+end
+</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:45.100</time>
@@ -1179,13 +1438,28 @@ end)
 			<packageName></packageName>
 			<time>00:02:00.000</time>
 		</Timer>
-		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+		<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>respell - improve buffs</name>
 			<script>cecho('\n\nchecking buffs!\n\n')
 njs50.respell(player.buffs, {queueSpellImprove = true})</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:01:00.000</time>
+		</Timer>
+		<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<name>improve ticker w/ sleep + drink</name>
+			<script>cecho('\n&lt;white&gt;Improve - halftick\n')
+
+send('stand &amp; |drink trough &amp; |inventory')
+
+improves.castSpell()
+
+tempTimer(7, function()
+  send('|sit couch &amp; |sleep')
+end, 'pending imp attempt')</script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:45.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve bandage</name>
@@ -1203,18 +1477,18 @@ njs50.respell(player.buffs, {queueSpellImprove = true})</script>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve area spell</name>
-			<script>local spell = 'xerotes'
+			<script>local spell = 'tempest'
 
 send('stand &amp; drink cauld &amp; drink soup')
 
 -- expandAlias('respell')
 
 tempTimer(3,function()
-  send('prep ' .. spell .. ' &amp; queue cast ' .. spell .. ' &amp; sit couch &amp; sleep')
+  send('prep ' .. spell .. ' &amp; queue cast ' .. spell .. ' &amp; sit couch &amp; sit bench &amp; sleep')
 end)</script>
 			<command></command>
 			<packageName></packageName>
-			<time>00:00:20.000</time>
+			<time>00:00:40.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve ticker w/tobacco</name>
@@ -1244,6 +1518,39 @@ end</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:35.000</time>
+		</Timer>
+		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<name>get pracs</name>
+			<script>local cmd = 'climb chain &amp; climb chain &amp; climb chain'
+
+murder.checkNum = ((murder.checkNum or 0) + 1) % 2
+
+if murder.checkNum == 0 then
+  murder.checkPracs(function(pracs)
+  
+  
+  
+    if (pracs &gt; 49) then
+      cecho('\n\ntoo many pracs!\n\n')
+      -- send('cstat got to 300 prac points, quitting for now...')
+      -- send('quit')
+      
+      disableTimer('get pracs')
+      
+      return
+    else  
+    
+      cecho('\n&lt;green&gt;IMPROVE BOT:&lt;white&gt; acquired ' .. tostring(pracs) .. ' prac points so far\n\n')
+
+    end
+  
+  end)
+else
+  send(cmd)
+end</script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:01.250</time>
 		</Timer>
 	</TimerPackage>
 	<AliasPackage>
@@ -1388,7 +1695,7 @@ end
   -- 'desiccate',
   'gale',
   -- 'blaze',
-  -- 'gloom',
+  'gloom',
   -- 'earthen fist',
   -- 'undergrowth',
   -- 'whirlwind',
@@ -1408,10 +1715,13 @@ end
   -- 'tornado',
   -- 'tempest',
   
+  'aqueous surge',
+  'viper nest',
+  
 }</script>
 			<command></command>
 			<packageName></packageName>
-			<regex>^resetDruidSpellImproves</regex>
+			<regex>^rdsi$</regex>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>improve landwalk</name>
@@ -1420,7 +1730,7 @@ end
 tfe.gotoRoom(28112, function()
   if (player.skills.landwalk &lt; 10) then
     send('gl &amp; get barr loot &amp; drink soup &amp; put barr loot &amp; pl &amp; queue cast landwalk')
-    murder.smokeUp('imps-with-wis','imps-with-wis', 20, function()
+    murder.smokeUp('imps','imps', 10, function()
       send('queue hide &amp; queue sleep')
     end)
     -- tempTimer(3, function()
@@ -1431,6 +1741,95 @@ end)</script>
 			<command></command>
 			<packageName></packageName>
 			<regex>^imp-lw</regex>
+		</Alias>
+		<Alias isActive="yes" isFolder="no">
+			<name>improveNonCombat</name>
+			<script>local hpItem = 'serp.ring'
+local bandage = 'a simple bandage'
+
+local improveThings = {
+  bandage = { bandage = true, cmd = 'bandage self', level = 10 },
+  compress = { bandage = true, cmd = 'compress self', level = 10 },
+  poultice = { bandage = true, cmd = 'poultice self', level = 10 },
+  salve = { bandage = true, cmd = 'poultice self', level = 7 },
+  ['healing mist'] = { heal = true, cmd = 'cast healing mist', level = 7 },
+  ['healing rain'] = { heal = true, cmd = 'cast healing rain', level = 10 },
+  impede = { cmd = 'cast impede', level = 10},
+  fireflies = { cmd = 'remove gold.ball &amp; | cast fireflies &amp; | remove fireflies &amp; | wear gold.ball', level = 10},
+  squall = { cmd = 'prep squall &amp; |cast squall', level = 10},
+  storm = { cmd = 'prep storm &amp; |cast storm', level = 10},
+  blizzard = { cmd = 'prep blizzard &amp; |cast blizzard', level = 7},
+  tornado = { cmd = 'prep tornado &amp; |cast tornado', level = 7},
+  tempest = { cmd = 'prep tempest &amp; |cast tempest', level = 10},
+  anemogenesis = { cmd = 'cast anemogenesis', level = 10},
+}
+
+-- display(thing, data)
+local skipThing = true
+
+-- find thing to imp
+for thing, data in pairs(improveThings) do 
+
+ 
+  if (
+    player.lastImproveSkill == nil or 
+    thing == player.lastImproveSkill
+  ) then
+    skipThing = false
+  end
+  
+  if ( not skipThing and
+       player.lastImproveSkill ~= thing and
+       player.skills[thing] and 
+       player.skills[thing] &gt; 0 and 
+       player.skills[thing] &lt; data.level 
+  ) then
+  
+    cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; lets improve ' .. thing .. '\n\n')
+
+    
+    if (data.bandage) then
+
+      common.getReagents(bandage, 1, function()
+        send('|remove ' .. hpItem .. ' &amp; |wear ' .. hpItem .. ' &amp; |sit')
+        send('|' .. data.cmd .. ' &amp; |wait 4 &amp; |stand')
+      end, function()
+        cecho('\n\nOut of ' .. bandage .. '!!!\n\n')
+      end)
+
+    elseif (data.heal) then
+
+      send('|remove ' .. hpItem .. ' &amp; |wear ' .. hpItem .. ' &amp; |' .. data.cmd)
+    
+    else
+      send('|' .. data.cmd)
+    end
+
+    player.lastImproveSkill = thing
+  
+    return
+  end
+  
+
+end
+
+if (player.lastImproveSkill ~= nil) then
+  player.lastImproveSkill = nil
+  expandAlias('improveNonCombat')
+else
+  cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; nothing left to improve!!!\n\n')
+end
+</script>
+			<command></command>
+			<packageName></packageName>
+			<regex>^improveNonCombat$</regex>
+		</Alias>
+		<Alias isActive="yes" isFolder="no">
+			<name>filler - for spell imps</name>
+			<script>expandAlias('improveNonCombat')</script>
+			<command></command>
+			<packageName></packageName>
+			<regex>^filler$</regex>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>^prepFull</name>
@@ -1459,12 +1858,12 @@ end)</script>
 			<packageName></packageName>
 			<regex>^(sl|rest)$</regex>
 		</Alias>
-		<Alias isActive="no" isFolder="no">
+		<Alias isActive="yes" isFolder="no">
 			<name>stand</name>
 			<script>druid.stand()</script>
 			<command></command>
 			<packageName></packageName>
-			<regex>^(st|stand)$</regex>
+			<regex>^(st)$</regex>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>up - in a hurry!</name>
@@ -1583,7 +1982,7 @@ druid.augRooms = {
 }
 
 
-druid.augRoom = 170
+druid.augRoom = 5117
 
 druid.augment = function(spell, terrain, target, cb, fcb)
 
@@ -2005,7 +2404,7 @@ druid.getFull = function (callback)
   if (not (player.gettingFull and player.position == 'sleeping')) then 
     player.gettingFull = true
     
-    if ((group.data[player.name].hp_max - group.data[player.name].hp) &gt; 125) then
+    if (player.healSpell and (group.data[player.name].hp_max - group.data[player.name].hp) &gt; 125) then
       send('cast ' .. player.healSpell)
     end
 
@@ -2081,9 +2480,31 @@ end
  
 player.postStormCheck = function(cb, options)
 
+  player.sscb = player.sscb or {}
+
+  if cb and not table.contains(player.sscb, cb) then
+    table.insert(player.sscb, cb)
+  end
+
+  local execCallback = function()
+    player.pendingPostStormCheck = nil
+    for idx, fn in ipairs(player.sscb) do
+      fn()
+    end
+    player.sscb = nil
+    
+  end
+
+  if (player.pendingPostStormCheck ~= nil) then  
+    cecho('\n\n&lt;red&gt;PREP:&lt;white&gt; post storm check is already pending\n') 
+    return
+  end
+  player.pendingPostStormCheck = true
+  
+
   options = options or {}
   
-  options.skipHealAmount = options.skipHealAmount or 150
+  options.skipHealAmount = options.skipHealAmount or 250
   
   
   options.sleepForMana = options.sleepForMana or false
@@ -2096,7 +2517,7 @@ player.postStormCheck = function(cb, options)
     skipAmount = options.skipHealAmount, 
     whileWaiting = function(cb2)
 
-      local prepAmount = math.floor((player.mp - player.reserveMana) / player.stormSpellReserves)
+      local prepAmount = math.floor((player.mp - player.reserveMana) / player.stormSpellReserveAmount)
       
       if (prepAmount == 0) then 
         cb2()
@@ -2113,15 +2534,18 @@ player.postStormCheck = function(cb, options)
         failCallback = function()
           cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; post storm respell failed, trying again in 10\n')
           tempTimer(10, function()
-            player.postStormCheck(cb, options)
+            player.pendingPostStormCheck = nil
+            return player.postStormCheck(nil, options)
           end)
         end,
         callback = function()
      
 
-          if ((player.mp &gt; player.reserveMana + player.stormSpellReserves) and
+          if ((player.mp &gt; (player.reserveMana + player.stormSpellReserveAmount)) and
             (player.prepped[player.stormSpell] &lt; player.minPreppedStormSpells)
           ) then
+            
+            player.prepped[player.stormSpell] = player.prepped[player.stormSpell] or 0
           
             -- mana is available to prep, prep 1
             common.prep(player.stormSpell, player.prepped[player.stormSpell] + 1, function()
@@ -2129,13 +2553,16 @@ player.postStormCheck = function(cb, options)
               if player.prepped[player.stormSpell] &lt; player.minPreppedStormSpells then
                 
                 cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; prepping another in 5\n') 
-                player.postStormCheck(cb, options)
+                player.pendingPostStormCheck = nil
+                return player.postStormCheck(nil, options)
                 
               else  
                 
-                mojune.reportMana()
+                player.pendingPostStormCheck = nil
+                druid.reportMana()
+                execCallback()  
                 cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; ready to roll\n') 
-                if (cb) then cb() end        
+                    
                 
               end
       
@@ -2143,30 +2570,47 @@ player.postStormCheck = function(cb, options)
           
           else
           
+          
+          
+          
             -- got enough prepped / free
             if (player.mp &gt; player.reserveMana and 
               player.prepped[player.stormSpell] and
               player.prepped[player.stormSpell] &gt;= player.minPreppedStormSpells) then
               
               cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; ready to roll\n') 
-              if (cb) then cb() end        
+              execCallback()    
               
             else
             
               -- need to get some more juice
+              
+
 
               if (options.sleepForMana and (gmcp.Char.Vitals.maxen - gmcp.Char.Vitals.en) &gt; 120 ) then
               
                 cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; getting full mana (once any storms end)\n')
                 player.ss.onStormDone(function()
-                  druid.getFull(cb)
+                  druid.getFull(function()
+                    execCallback()
+                  end)
                 end)
               
               else
+              
+                -- required mana for min spells
+                -- local spellsNeeded = (player.minPreppedStormSpells - (player.prepped[player.stormSpell] or 0))
+                -- local reqMana = player.stormSpellCost * spellsNeeded + player.reserveMana
+                -- cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; waiting for mana to regen for ' .. tostring(spellsNeeded) .. ' storm spells\n')
+
+                -- if (gmcp.Char.Vitals.en &gt; reqMana) then
+                  -- druid.prepFree(cb)
+                -- end
 
                 cecho('\n\n&lt;green&gt;PREP:&lt;white&gt; waiting for mana to regen (15s)\n')
                 tempTimer(15, function()
-                  player.postStormCheck(cb, options)
+                  player.pendingPostStormCheck = nil
+                  return player.postStormCheck(nil, options)
                 end, 'waiting on mana for post-storm-check')
                 
               end
@@ -2220,7 +2664,7 @@ druid.makeItRain = function(options)
       ) then
         canSkip = false
       end
-      cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; ' .. name .. ' is ' .. tostring(group[name].hp) .. ' of ' .. tostring(group[name].hp_max) .. 'hp!\n\n')
+      cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; ' .. name .. ' is ' .. tostring(group.data[name].hp) .. ' of ' .. tostring(group.data[name].hp_max) .. 'hp!\n\n')
     end
     
     if (canSkip) then
@@ -2359,14 +2803,20 @@ farmer.afterCommonLoaded(function ()
   
   
   local getImproveCommand = function(exit)
-	
-  if (exit and exit.firstTarget) then
-      return improves.getImproveSpell() .. ' ' .. exit.firstTarget
-	else
-		return ''
-	end
-
-end
+    
+    if (improves.sawAction) then
+      cecho('\n&lt;green&gt;IMPS:&lt;white&gt; waiting for action timer to cool down\n')
+      return ''
+    end
+    
+    
+    if (exit and exit.firstTarget) then
+        return improves.getImproveSpell() .. ' ' .. exit.firstTarget
+    else
+    	return ''
+    end
+    
+  end
   
   -- set the names of targets to murder
   local steps = { 
