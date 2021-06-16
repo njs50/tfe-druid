@@ -27,8 +27,9 @@ cecho('\n\n&lt;green&gt;IMPROVES: &lt;white&gt;saw some action!\n\n')
 if (improves.actionRelease) then
   killTimer(improves.actionRelease)
 end
-
-improves.actionRelease = tempTimer(20, function()
+send('sleep')
+improves.actionRelease = tempTimer(40, function()
+  send('stand &amp; |scan')
   improves.actionRelease = nil
   improves.sawAction = nil
 end)</script>
@@ -44,179 +45,6 @@ end)</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^You receive \d+ experience points\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Your x (didn't cast)</name>
-				<script>send('k')</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>Your</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>2</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="yes" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>falls asleep - murder mode</name>
-				<script>local vic = common.dotCase(common.toMurderString(matches[3]))
-
--- reminder to check murder.resume() clears a murder.pause() timer on moju
--- also that a second murder.pause doesn't start a second timer?
-send(improves.getImproveSpell() .. ' ' ..  vic)</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^(A|An|The) (.*) drops .* asleep\.</string>
-					<string>^(A|An|The) (.*) slips deeper into slumber\.</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>You begin casting</name>
-				<script>if (matches[2] ~= 'sleep') then
-  send(improves.getImproveSpell())
-end</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>You begin casting (\w+)</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>2</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>mists fail</name>
-				<script>send('cast mists')</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>Casting mists of sleep requires no target.</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>2</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>Casting x requires no target</name>
-				<script>local spell = matches[2]
-
-disableTrigger('Casting x requires no target')
-
-send('cast ' .. spell)
-
-tempTimer(2, function()
-  send('prep ' .. spell)
-end)
-
-tempTimer(20, function()
-  enableTrigger('Casting x requires no target')
-end)</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^Casting (.*) requires no target\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>You dont have x prepared</name>
-				<script>local spell = matches[2]
-
-disableTrigger('You dont have x prepared')
-
-send('prep ' .. spell)
-send('queue cast ' .. spell)
-
-tempTimer(20, function()
-  enableTrigger('You dont have x prepared')
-end)</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^You don't have (.*) prepared\.$</string>
-				</regexCodeList>
-				<regexCodePropertyList>
-					<integer>1</integer>
-				</regexCodePropertyList>
-			</Trigger>
-			<Trigger isActive="no" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>need mana for tempest</name>
-				<script>disableTrigger('need mana for tempest')
-tempTimer(10, function()
-  enableTrigger('need mana for tempest')
-  send('prep tempest')
-end)</script>
-				<triggerType>0</triggerType>
-				<conditonLineDelta>0</conditonLineDelta>
-				<mStayOpen>0</mStayOpen>
-				<mCommand></mCommand>
-				<packageName></packageName>
-				<mFgColor>#ff0000</mFgColor>
-				<mBgColor>#ffff00</mBgColor>
-				<mSoundFile></mSoundFile>
-				<colorTriggerFgColor>#000000</colorTriggerFgColor>
-				<colorTriggerBgColor>#000000</colorTriggerBgColor>
-				<regexCodeList>
-					<string>^You need \w+ energy points to prepare tempest\.</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -402,6 +230,8 @@ send('queue cast landwalk &amp; cast landbinding')</script>
     ['107'] = true,
     ['5117'] = true,
     ['5113'] = true,
+    ['3817'] = true,
+    ['5880'] = true, -- using snakeskins for resist = no hiding
   }
   
   
@@ -420,6 +250,10 @@ send('queue cast landwalk &amp; cast landbinding')</script>
   
   -- make sure we have checked out equip before autohide is enabled
   if (player and player.gear) then
+    
+    if catalog.isWearing('snakeskin bracer of elemental resistance') then
+      cantHide = true
+    end
     
     if (player.gear.feet and player.gear.feet.base and player.gear.feet.base.item == 'ivory boots') then
       cantHide = true
@@ -777,6 +611,129 @@ end
 			</Trigger>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>druid - healing</name>
+			<script></script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList />
+			<regexCodePropertyList />
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>heal casting</name>
+				<script>druid.healCastStart()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>You begin casting healing rain.</string>
+					<string>You begin casting healing mist.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>heal cast</name>
+				<script>druid.healStarted()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>+++ You cast healing rain +++</string>
+					<string>+++ You cast healing mist +++</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>heal finished</name>
+				<script>druid.healEnded()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>The healing mists evaporate.</string>
+					<string>The healing rains disperse.</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>2</integer>
+					<integer>2</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>storm interrupted</name>
+				<script>druid.healInterrupted()</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^&gt;&gt; Your healing (rain|mist) casting is disrupted\. &lt;&lt;</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>in combat fail</name>
+				<script>druid.healCombatFail()
+</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^You cannot cast (healing rain|healing mist) while fighting\.$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+		</TriggerGroup>
+		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>druid - storm</name>
 			<script></script>
 			<triggerType>0</triggerType>
@@ -910,7 +867,8 @@ end</script>
   cecho('&lt;green&gt; &lt;-- &lt;white&gt; ss disrupt')
   raiseEvent(player.ss.events.STORM_ENDED)
   
-end</script>
+end
+</script>
 				<triggerType>0</triggerType>
 				<conditonLineDelta>0</conditonLineDelta>
 				<mStayOpen>0</mStayOpen>
@@ -923,6 +881,31 @@ end</script>
 				<colorTriggerBgColor>#000000</colorTriggerBgColor>
 				<regexCodeList>
 					<string>^&gt;&gt; Your (tempest|tornado|blizzard|storm|squall) casting is disrupted\. &lt;&lt;</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>storm prep interrupted</name>
+				<script>-- &gt;&gt; Your tempest preparation is disrupted. &lt;&lt;
+local target = matches[2]
+
+common.onClear(function()
+  send('prepare ' .. target)
+end)</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>0</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^&gt;&gt; Your (tempest|tornado|blizzard|storm|squall) preparation is disrupted\. &lt;&lt;</string>
 				</regexCodeList>
 				<regexCodePropertyList>
 					<integer>1</integer>
@@ -1005,7 +988,7 @@ if (matches[3] == 'ivy' or matches[3] == 'vine') then
     druid.aug = {
       vic = matches[2],
       spell = matches[3],
-      terrain = matches[4],
+      terrain = matches[4]:lower(),
       item = matches[5],
       pending = true
     }
@@ -1216,6 +1199,28 @@ end)
 			</regexCodePropertyList>
 		</Trigger>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>get ready</name>
+			<script>expandAlias('getReady')</script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList>
+				<string>^.* tells? (?:your|the) group[^:]*: "get ready"</string>
+				<string>^.* reports? group status[^:]*: "get ready"</string>
+			</regexCodeList>
+			<regexCodePropertyList>
+				<integer>1</integer>
+				<integer>1</integer>
+			</regexCodePropertyList>
+		</Trigger>
+		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>dead thing - report juice</name>
 			<script>-- send('skin corpse &amp; eat corpse &amp; get all &amp; drop all.corpse')
 -- send('eat corpse')
@@ -1336,6 +1341,31 @@ send('observe')
 				<integer>1</integer>
 			</regexCodePropertyList>
 		</Trigger>
+		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>cant use while hiding</name>
+			<script>-- You can't use 2 snakeskin bracers of elemental resistance while hiding.
+
+expandAlias('unhide')
+resetGear()
+
+</script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList>
+				<string>^You can't use .* while hiding\.$</string>
+			</regexCodeList>
+			<regexCodePropertyList>
+				<integer>1</integer>
+			</regexCodePropertyList>
+		</Trigger>
 	</TriggerPackage>
 	<TimerPackage>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
@@ -1347,32 +1377,19 @@ expandAlias('respell')</script>
 			<time>00:02:00.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>kick/swim while no improve casts queued</name>
-			<script>-- local cmd = 'queue dive pool &amp; queue climb chain'
-local cmd = 'queue kick stand &amp; queue kick stand'
-if (#improves.castQueue == 0) then
-  send(cmd)
-else
-  
-  if (improves.castFillerLastTick ~= false) then
-    improves.castFillerLastTick = false
-    tempTimer(65, function()
-      send('+')
-      murder.smokeUp('imps-no-wis','imps', 12, function()
-        improves.castSpell()
-        send('wait 3')
-      end)
-    end, 'casting buff delay')
-  end
-end</script>
+			<name>respell improves</name>
+			<script>cecho('\n\nchecking buffs!\n\n')
+njs50.respell(player.buffs, {queueSpellImprove = true})</script>
 			<command></command>
 			<packageName></packageName>
-			<time>00:00:01.100</time>
+			<time>00:02:00.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>cast improve spell w/tobacco</name>
+			<name>cast improve spell w/tobacco for buffs</name>
 			<script>cecho('\n&lt;white&gt;Improve - halftick\n')
-send('stand')
+improves.setFiller(druid.improveNonCombat)
+
+-- send('stand')
 
 if (#improves.castQueue &gt; 0) then
 
@@ -1391,13 +1408,62 @@ if (#improves.castQueue &gt; 0) then
   end
   
 else
-  improves.castSpell()
-  -- send('sit couch &amp; sleep')
+  improves.castSpell(function()
+    send('|drink cauldron')
+    -- send('|sit couch &amp; |sleep')
+  end)
 end
-</script>
+
+
+
+
+
+
+
+improves.resetFiller()</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:45.100</time>
+		</Timer>
+		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<name>improve spells w/ druid non combat improve filler</name>
+			<script>cecho('\n&lt;white&gt;Improve - halftick\n')
+
+improves.setFiller(druid.improveNonCombat)
+
+send('stand')
+improves.castSpell(function()
+  send('|drink cauldron &amp; |sit couch &amp; |sleep')
+end)
+
+improves.resetFiller()</script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:45.000</time>
+		</Timer>
+		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+			<name>kick/swim while no improve casts queued</name>
+			<script>-- local cmd = 'queue dive pool &amp; queue climb chain'
+local cmd = '|kick stand &amp; |kick stand &amp; |kick stand'
+
+if (#improves.castQueue == 0) then
+  send(cmd)
+else
+  
+  if (improves.castFillerLastTick ~= false) then
+    improves.castFillerLastTick = false
+    tempTimer(65, function()
+      send('+')
+      murder.smokeUp('imps-no-wis','imps', 12, function()
+        improves.castSpell()
+        send('wait 3')
+      end)
+    end, 'casting buff delay')
+  end
+end</script>
+			<command></command>
+			<packageName></packageName>
+			<time>00:00:01.100</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>cast improve spell</name>
@@ -1438,15 +1504,7 @@ end)
 			<packageName></packageName>
 			<time>00:02:00.000</time>
 		</Timer>
-		<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>respell - improve buffs</name>
-			<script>cecho('\n\nchecking buffs!\n\n')
-njs50.respell(player.buffs, {queueSpellImprove = true})</script>
-			<command></command>
-			<packageName></packageName>
-			<time>00:01:00.000</time>
-		</Timer>
-		<Timer isActive="yes" isFolder="no" isTempTimer="no" isOffsetTimer="no">
+		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve ticker w/ sleep + drink</name>
 			<script>cecho('\n&lt;white&gt;Improve - halftick\n')
 
@@ -1460,35 +1518,6 @@ end, 'pending imp attempt')</script>
 			<command></command>
 			<packageName></packageName>
 			<time>00:00:45.000</time>
-		</Timer>
-		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>improve bandage</name>
-			<script>expandAlias('imp-bandage')</script>
-			<command></command>
-			<packageName></packageName>
-			<time>00:01:05.000</time>
-		</Timer>
-		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>improve cheap spell</name>
-			<script>expandAlias('imp-aqua')</script>
-			<command></command>
-			<packageName></packageName>
-			<time>00:00:10.000</time>
-		</Timer>
-		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
-			<name>improve area spell</name>
-			<script>local spell = 'tempest'
-
-send('stand &amp; drink cauld &amp; drink soup')
-
--- expandAlias('respell')
-
-tempTimer(3,function()
-  send('prep ' .. spell .. ' &amp; queue cast ' .. spell .. ' &amp; sit couch &amp; sit bench &amp; sleep')
-end)</script>
-			<command></command>
-			<packageName></packageName>
-			<time>00:00:40.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>improve ticker w/tobacco</name>
@@ -1523,25 +1552,23 @@ end</script>
 			<name>get pracs</name>
 			<script>local cmd = 'climb chain &amp; climb chain &amp; climb chain'
 
-murder.checkNum = ((murder.checkNum or 0) + 1) % 2
+murder.checkNum = ((murder.checkNum or 0) + 1) % 10
 
 if murder.checkNum == 0 then
+  disableTimer('get pracs')
   murder.checkPracs(function(pracs)
   
   
   
-    if (pracs &gt; 49) then
+    if (pracs &gt; 305) then
       cecho('\n\ntoo many pracs!\n\n')
       -- send('cstat got to 300 prac points, quitting for now...')
       -- send('quit')
-      
-      disableTimer('get pracs')
-      
+
       return
     else  
-    
+      enableTimer('get pracs')
       cecho('\n&lt;green&gt;IMPROVE BOT:&lt;white&gt; acquired ' .. tostring(pracs) .. ' prac points so far\n\n')
-
     end
   
   end)
@@ -1636,39 +1663,6 @@ njs50.respell(player.buffs, {
 			<regex>^respell ?(.*)$</regex>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
-			<name>improve bandage</name>
-			<script>-- 
--- local spell = 'compress'
--- local reagent = 'a clump of herbs'
-
-
-local spell = 'poultice'
-local reagent = 'a thick aloe leaf'
-
-local bandage = 'a simple bandage'
-
-if (player.skills[spell] &lt; 10) then
-
-  common.getReagents(reagent, 1, function()
-    common.getReagents(bandage, 1, function()
-      send('rem cinna &amp; queue sit &amp; queue wea cinna &amp; queue ' .. spell .. ' self &amp; wait 10 &amp; queue stand')
-    end, function()
-      cecho('\n\nOut of ' .. bandage .. '!!!\n\n')
-    end)
-  end, function()
-    cecho('\n\nOut of ' .. reagent .. '!!!\n\n')
-  end)
-else
-  cecho('\n\n&lt;green&gt; ' .. spell .. ' is maxxed, hooray!\n')
-end
-
-
-</script>
-			<command></command>
-			<packageName></packageName>
-			<regex>^imp-bandage$</regex>
-		</Alias>
-		<Alias isActive="yes" isFolder="no">
 			<name>improve aqua spell</name>
 			<script>
 local spell = 'aqueous surge'
@@ -1744,92 +1738,10 @@ end)</script>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>improveNonCombat</name>
-			<script>local hpItem = 'serp.ring'
-local bandage = 'a simple bandage'
-
-local improveThings = {
-  bandage = { bandage = true, cmd = 'bandage self', level = 10 },
-  compress = { bandage = true, cmd = 'compress self', level = 10 },
-  poultice = { bandage = true, cmd = 'poultice self', level = 10 },
-  salve = { bandage = true, cmd = 'poultice self', level = 7 },
-  ['healing mist'] = { heal = true, cmd = 'cast healing mist', level = 7 },
-  ['healing rain'] = { heal = true, cmd = 'cast healing rain', level = 10 },
-  impede = { cmd = 'cast impede', level = 10},
-  fireflies = { cmd = 'remove gold.ball &amp; | cast fireflies &amp; | remove fireflies &amp; | wear gold.ball', level = 10},
-  squall = { cmd = 'prep squall &amp; |cast squall', level = 10},
-  storm = { cmd = 'prep storm &amp; |cast storm', level = 10},
-  blizzard = { cmd = 'prep blizzard &amp; |cast blizzard', level = 7},
-  tornado = { cmd = 'prep tornado &amp; |cast tornado', level = 7},
-  tempest = { cmd = 'prep tempest &amp; |cast tempest', level = 10},
-  anemogenesis = { cmd = 'cast anemogenesis', level = 10},
-}
-
--- display(thing, data)
-local skipThing = true
-
--- find thing to imp
-for thing, data in pairs(improveThings) do 
-
- 
-  if (
-    player.lastImproveSkill == nil or 
-    thing == player.lastImproveSkill
-  ) then
-    skipThing = false
-  end
-  
-  if ( not skipThing and
-       player.lastImproveSkill ~= thing and
-       player.skills[thing] and 
-       player.skills[thing] &gt; 0 and 
-       player.skills[thing] &lt; data.level 
-  ) then
-  
-    cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; lets improve ' .. thing .. '\n\n')
-
-    
-    if (data.bandage) then
-
-      common.getReagents(bandage, 1, function()
-        send('|remove ' .. hpItem .. ' &amp; |wear ' .. hpItem .. ' &amp; |sit')
-        send('|' .. data.cmd .. ' &amp; |wait 4 &amp; |stand')
-      end, function()
-        cecho('\n\nOut of ' .. bandage .. '!!!\n\n')
-      end)
-
-    elseif (data.heal) then
-
-      send('|remove ' .. hpItem .. ' &amp; |wear ' .. hpItem .. ' &amp; |' .. data.cmd)
-    
-    else
-      send('|' .. data.cmd)
-    end
-
-    player.lastImproveSkill = thing
-  
-    return
-  end
-  
-
-end
-
-if (player.lastImproveSkill ~= nil) then
-  player.lastImproveSkill = nil
-  expandAlias('improveNonCombat')
-else
-  cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; nothing left to improve!!!\n\n')
-end
-</script>
+			<script>druid.improveNonCombat()</script>
 			<command></command>
 			<packageName></packageName>
 			<regex>^improveNonCombat$</regex>
-		</Alias>
-		<Alias isActive="yes" isFolder="no">
-			<name>filler - for spell imps</name>
-			<script>expandAlias('improveNonCombat')</script>
-			<command></command>
-			<packageName></packageName>
-			<regex>^filler$</regex>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>^prepFull</name>
@@ -1850,6 +1762,16 @@ end)</script>
 			<command></command>
 			<packageName></packageName>
 			<regex>^(prepFree|pfree)\s?(.*)$</regex>
+		</Alias>
+		<Alias isActive="yes" isFolder="no">
+			<name>get ready</name>
+			<script>player.postStormCheck(function()
+  send('gstat ready (' .. player.name .. ')')
+end)
+</script>
+			<command></command>
+			<packageName></packageName>
+			<regex>^getReady$</regex>
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>sleep|rest</name>
@@ -2282,6 +2204,8 @@ end)</script>
 			<packageName></packageName>
 			<script>druid = druid or {}
 
+-- A silver coin lies here, forgotten.
+ 
 druid.waysRepopCheckCoin = function(direction, cb)
   common.checkRepopByDrop(direction, [[^\S+ \w+ coins? lies?]], cb)
 end</script>
@@ -2647,6 +2571,142 @@ player.prepFree = druid.prepFree</script>
 			<packageName></packageName>
 			<script>druid = druid or {}
 
+druid.healState = druid.healState or {}
+
+druid.healState.events = druid.healState.events or {}
+
+druid.healState.events.HEAL_STARTED = 'druid: heal started'
+druid.healState.events.HEAL_ENDED = 'druid: heal ended'
+
+
+druid.onHealEnd = function(cb)
+
+  local rwatch, rewatch
+  
+  -- stop waiting for the end if we change rooms
+  rwatch = registerAnonymousEventHandler(tfe.events.ROOM_CHANGED, function ()
+    killAnonymousEventHandler(rewatch)
+    cb()
+  end, true)
+  
+  rewatch = registerAnonymousEventHandler(druid.healState.events.HEAL_ENDED, function ()
+    killAnonymousEventHandler(rwatch)
+    cb()
+  end, true)
+  
+end
+
+
+druid.castHeal = function(options)
+  
+  options = options or {}
+  
+  local resolveCallbacks = function()
+  
+    local waitingDone = true
+    local rainDone = false
+    
+    if (options.whileWaiting) then
+      waitingDone = false
+      options.whileWaiting(function()
+        waitingDone = true
+        if (rainDone and options.callback) then
+          options.callback()
+        end
+      end)
+      
+    end   
+   
+    druid.onHealEnd(function()
+      cecho('\n&lt;green&gt;DRUID:&lt;white&gt; ' .. player.healSpell .. ' ended!\n\n')
+      if (options.callback and waitingDone) then 
+        options.callback()
+      else
+        rainDone = true
+      end    
+    end)  
+    
+  end
+
+
+  -- skip if we already have one queued / in progress
+  if (druid.healState.casting or druid.healState.healing) then
+    cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; attempted to heal while heal already in progress\n')
+    resolveCallbacks()
+    return
+  end
+
+  local retry = function ()  
+    tempTimer(5, function()
+      druid.makeItRain(options)
+    end, 'healing retry')
+  end
+
+  if (player.healSpellCost &gt; player.mp) then
+    
+    cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; not enough mana for ' .. player.healSpell .. ', waiting 5s\n')
+    retry()
+  
+  else
+  
+    druid.healState.casting = true
+    
+    njs50.cast(player.healSpell, {
+      callback = function()
+        resolveCallbacks()
+      end,
+      failCallback = function()
+        cecho('\n&lt;red&gt;DRUID:&lt;white&gt; failed to cast ' .. player.healSpell .. ', trying again in 5s\n')
+        retry()
+      end
+    
+    })
+  end
+end
+
+druid.healCastStart = function()
+  cecho('&lt;green&gt; &lt;-- heal casting\n')
+  druid.healState.casting = true
+end
+
+druid.healStarted = function()
+  cecho('&lt;green&gt; &lt;-- heal started\n')
+  druid.healState.casting = nil
+  druid.healState.healing = true
+  raiseEvent(druid.healState.events.HEAL_STARTED)
+end
+
+druid.healEnded = function()
+  cecho('&lt;green&gt; &lt;-- heal ended\n')
+  druid.healState.healing = nil
+  raiseEvent(druid.healState.events.HEAL_ENDED)
+end
+
+druid.healInterrupted = function()
+  cecho('&lt;green&gt; &lt;-- heal interrupted\n')
+  druid.healState.casting = nil
+end
+
+druid.healCombatFail = function()
+  cecho('&lt;green&gt; &lt;-- heal failed (combat)\n')
+  druid.healState.casting = nil
+  common.onNextEvent(common.events.COMBAT_ENDED, druid.castHeal)
+end
+
+
+-- add some event watchers
+
+if (druid.healState.roomChangeWatch) then
+  killAnonymousEventHandler(druid.healState.roomChangeWatch)
+  druid.healState.roomChangeWatch = nil
+end
+
+druid.healState.roomChangeWatch = registerAnonymousEventHandler(tfe.events.ROOM_CHANGED, function ()
+  druid.healState.casting = nil
+  druid.healState.healing = nil
+end)
+
+
 druid.makeItRain = function(options)
 
   options = options or {}
@@ -2664,79 +2724,18 @@ druid.makeItRain = function(options)
       ) then
         canSkip = false
       end
-      cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; ' .. name .. ' is ' .. tostring(group.data[name].hp) .. ' of ' .. tostring(group.data[name].hp_max) .. 'hp!\n\n')
+      cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; ' .. name .. ' is ' .. tostring(group.data[name].hp) .. ' of ' .. tostring(group.data[name].hp_max) .. 'hp!\n')
     end
     
     if (canSkip) then
-      cecho('\n&lt;green&gt;DRUID:&lt;white&gt; healthy enough to skip ' .. player.healSpell .. '!\n\n')
+      cecho('\n&lt;green&gt;DRUID:&lt;white&gt; healthy enough to skip ' .. player.healSpell .. '!\n')
       if (options.callback) then options.callback() end
       return
     end
     
   end
-
-  local retry = function ()  
-    tempTimer(10, function()
-      druid.makeItRain(options)
-    end)
-  end
-
-  if (player.healSpellCost &gt; player.mp) then
-    
-    cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; not enough mana for ' .. player.healSpell .. ', waiting 10s\n\n')
-    retry()
   
-  else
-    njs50.cast(player.healSpell, {
-      callback = function()
-        
-        local waitingDone = true
-        local rainDone = false
-        
-        if (options.whileWaiting) then
-          waitingDone = false
-          
-          options.whileWaiting(function()
-            waitingDone = true
-            if (rainDone and options.callback) then
-              options.callback()
-            end
-          end)
-          
-        end
-        
-        local rwatch, retrig
-        
-        local rainDone = function()
-          cecho('\n&lt;green&gt;DRUID:&lt;white&gt; ' .. player.healSpell .. ' ended!\n\n')
-          if (options.callback and waitingDone) then 
-            options.callback()
-          else
-            rainDone = true
-          end
-        end
-        
-        -- stop waiting for the end if we change rooms
-        rwatch = registerAnonymousEventHandler(tfe.events.ROOM_CHANGED, function ()
-          killTrigger(retrig)
-          rainDone()
-        end, true)
-        
-                
-        retrig = tempRegexTrigger([[^The healing rains disperse\.$]], function()
-          -- remove room change watrcher
-          killAnonymousEventHandler(rwatch)
-          rainDone()
-        end, 1)
-      
-      end,
-      failCallback = function()
-        cecho('\n&lt;red&gt;DRUID:&lt;white&gt; failed to cast ' .. player.healSpell .. ', trying again in 10s\n\n')
-        retry()
-      end
-    
-    })
-  end
+  druid.castHeal(options)
 
 
 end</script>
@@ -2777,10 +2776,194 @@ end</script>
 			<eventHandlerList />
 		</Script>
 		<ScriptGroup isActive="yes" isFolder="yes">
-			<name>improve bot</name>
+			<name>improves</name>
 			<packageName></packageName>
 			<script></script>
 			<eventHandlerList />
+			<Script isActive="yes" isFolder="no">
+				<name>improves</name>
+				<packageName></packageName>
+				<script>druid = druid or {}
+
+druid.improveNonCombat = function(cb)
+  
+  cb = cb or function() end
+  
+  local hpItem = 'serp.ring'
+  local bandage = 'a simple bandage'
+  
+  local improveThings = {
+    
+    -- this one is a bit shit because you can't keep doing it in the same room
+    -- dowse = { cmd = 'cast dowse &amp; |fill cant puddle &amp; |empt cant &amp; |fill cant puddle &amp; |empt cant', level = 7},
+    
+    bandage = { bandage = true, cmd = 'bandage self', reagent = 'a simple bandage', level = 10 },
+    compress = { bandage = true, cmd = 'compress self', reagent = 'a clump of herbs', level = 10 },
+    poultice = { bandage = true, cmd = 'poultice self', reagent = 'a thick aloe leaf', level = 10 },
+    salve = { bandage = true, cmd = 'poultice self', level = 7 },
+    ['healing mist'] = { heal = true, cmd = 'cast healing mist', level = 7 },
+    ['healing rain'] = { heal = true, cmd = 'cast healing rain', level = 10 },
+    
+    impede = { cmd = 'cast impede', level = 10},
+    
+    fireflies = { cmd = 'remove gold.ball &amp; | cast fireflies &amp; | remove fireflies &amp; | wear gold.ball', level = 10},
+    
+    squall = { cmd = 'prep squall &amp; |cast squall', level = 10},
+    storm = { cmd = 'prep storm &amp; |cast storm', level = 10},
+    blizzard = { cmd = 'prep blizzard &amp; |cast blizzard', level = 7},
+    tornado = { cmd = 'prep tornado &amp; |cast tornado', level = 7},
+    tempest = { cmd = 'prep tempest &amp; |cast tempest', level = 10},
+    
+    anemogenesis = { cmd = 'cast anemogenesis', level = 10},
+    xerotes = { cmd = 'cast xerotes', level = 10},
+  }
+  
+  -- display(thing, data)
+  local skipThing = true
+  
+  -- find thing to imp
+  for thing, data in pairs(improveThings) do 
+   
+    if (
+      player.lastImproveSkill == nil or 
+      thing == player.lastImproveSkill
+    ) then
+      skipThing = false
+    end
+    
+    if ( not skipThing and
+         player.lastImproveSkill ~= thing and
+         player.skills[thing] and 
+         player.skills[thing] &gt; 0 and 
+         player.skills[thing] &lt; data.level 
+    ) then
+    
+      cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; lets improve ' .. thing .. '\n\n')
+  
+      
+      if (data.bandage) then
+  
+        common.getReagents(data.reagent, 1, function()
+          common.getReagents(bandage, 1, function()
+            send('|remove ' .. hpItem .. ' &amp; |wear ' .. hpItem .. ' &amp; |sit')
+            send('|' .. data.cmd .. ' &amp; |wait 4 &amp; |stand')
+            cb()
+          end, function()
+            cecho('\n\nOut of ' .. bandage .. '!!!\n\n')
+          end)
+        end, function()
+          cecho('\n\nOut of ' .. data.reagent .. '!!!\n\n')
+        end)
+  
+      elseif (data.heal) then
+  
+        send('|remove ' .. hpItem .. ' &amp; |wear ' .. hpItem .. ' &amp; |' .. data.cmd)
+        cb()
+      
+      else
+        send('|' .. data.cmd)
+        cb()
+      end
+  
+      player.lastImproveSkill = thing
+      
+      
+      return
+  
+    end
+  
+  end
+  
+  if (player.lastImproveSkill ~= nil) then
+    player.lastImproveSkill = nil
+    druid.improveNonCombat(cb)
+  else
+    cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; nothing left to improve!!!\n\n')
+    cb()
+  end
+  
+end
+
+druid.improveCombat = function(target)
+  
+  cb = cb or function() end
+  
+  local improveThings = {
+    
+    -- need to keep moving while doing this. bleh
+    dowse = { cmd = 'cast dowse &amp; |fill cant puddle &amp; |empt cant &amp; |fill cant puddle &amp; |empt cant &amp; |cast gale', level = 7},
+    
+    -- darkness
+    nocturne = { cmd = 'cast nocturne', level = 7},
+    gloom = { cmd = 'cast gloom', level = 10},
+    shadowstrike = { cmd = 'cast shadowstrike', level = 7},
+    ['veil of darkness'] = { cmd = 'cast veil of darkness', level = 10},
+    
+    -- for healing
+    ['aqueous surge'] = { cmd = 'cast aqueous surge', level = 7},
+    ['aqueous spirit'] = { cmd = 'cast aqueous spirit', level = 7},
+    
+    -- wind
+    gust = { cmd = 'cast gust', level = 7},
+    ['wind shear'] = { cmd = 'cast wind shear', level = 7},
+    gale = { cmd = 'cast gale', level = 10},
+    whirlwind = { cmd = 'cast whirlwind', level = 10},
+    
+    -- util
+    undergrowth = { cmd = 'cast undergrowth', level = 10},
+    
+    -- drying (for xerotes)
+    dry = { cmd = 'cast dry', level = 10},
+    parch = { cmd = 'cast parch', level = 7},
+    desiccate = { cmd = 'cast desiccate', level = 7},
+    
+    -- aoe (optional)
+    blizzard = { cmd = 'prep blizzard &amp; |cast blizzard &amp; |sigh', level = 7},
+    
+  }
+  
+  -- display(thing, data)
+  local skipThing = true
+  
+  -- find thing to imp
+  for thing, data in pairs(improveThings) do 
+   
+    if (
+      player.lastImproveSkill == nil or 
+      thing == player.lastImproveSkill
+    ) then
+      skipThing = false
+    end
+    
+    if ( not skipThing and
+         player.lastImproveSkill ~= thing and
+         player.skills[thing] and 
+         player.skills[thing] &gt; 0 and 
+         player.skills[thing] &lt; data.level 
+    ) then
+    
+      cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; lets improve ' .. thing .. '\n\n')
+  
+      player.lastImproveSkill = thing
+      
+      return data.cmd .. ' ' .. target
+  
+    end
+  
+  end
+  
+  if (player.lastImproveSkill ~= nil) then
+    player.lastImproveSkill = nil
+    return druid.improveCombat(target)
+  else
+    cecho('\n&lt;green&gt;IMPROVE:&lt;white&gt; nothing left to improve!!!\n\n')
+    return ''
+  end
+  
+end
+</script>
+				<eventHandlerList />
+			</Script>
 			<Script isActive="yes" isFolder="no">
 				<name>spell-improve-path</name>
 				<packageName></packageName>
@@ -2901,6 +3084,96 @@ farmer.afterCommonLoaded(function ()
   
 
 end)</script>
+				<eventHandlerList />
+			</Script>
+			<Script isActive="yes" isFolder="no">
+				<name>trog.imps</name>
+				<packageName></packageName>
+				<script>farmer.afterCommonLoaded(function ()
+
+local options = {
+
+  longName = 'trog.imps',
+
+  targets = {
+    ["small.brown.troglodyte"] = 1,
+    ["small.brown.troglodyt"] = 1,
+    ["sallow-skinned.troglodyte"] = 1,
+    ["sallow-skinned.troglodyt"] = 1,
+  },
+
+  onStopByTrigger = function ()
+    send('stop was commanded - begin self destruct sequence')
+  end,
+
+}
+
+
+local getImproveCommand = function(exit)
+  
+  if (improves.sawAction) then
+    cecho('\n&lt;green&gt;IMPS:&lt;white&gt; waiting for action timer to cool down\n')
+    return ''
+  end
+  
+  
+  if (exit and exit.firstTarget) then
+      return druid.improveCombat(exit.firstTarget)
+  else
+  	return ''
+  end
+  
+end
+
+local steps = {
+
+  {
+    waypoints = {19348}, -- repop
+    getKillCommand = getImproveCommand,
+    action = function (cb)
+      send('group -l ' .. player.name)
+      improves.sawAction = false
+      njs50bot.sleepUntilFull(function ()
+        common.checkRepopByDrop(49250, [[^\S+ \w+ coins? lies?]], cb, 5)
+      end)
+    end,
+  },
+  
+  {
+    waypoints = {49250}, -- repop check room
+    action = "drop silver.coin"
+  },
+  
+  { 
+    waypoints = {49296},
+    getKillCommand = getImproveCommand,  
+    action = "drink &amp; drink &amp; drink",
+  },
+
+  {
+    waypoints = {49295, 49267, 49272, 49278, 49279, 49287, 49288, 49284, 49281, 49282, 49291, 49290, 49285}, -- path
+    getKillCommand = getImproveCommand,  
+  },
+
+  {
+    waypoints = {19348}, -- repop
+    getKillCommand = getImproveCommand,  
+  },
+
+
+}
+
+local completeCallback = function ()
+  send('gstat trog.imps is done...')
+  farmer.restart()
+end
+
+farmer.configure('trog.imps', steps, completeCallback, options)
+
+end)
+
+
+</script>
 				<eventHandlerList />
 			</Script>
 		</ScriptGroup>
