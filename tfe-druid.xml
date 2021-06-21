@@ -98,39 +98,6 @@ end)</script>
 			</regexCodePropertyList>
 		</Trigger>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-			<name>refill vessel</name>
-			<script>
-send('empty ' .. player.vessel)
-
-if (matches[2] ~= '') then
-  send('fill ' .. player.vessel .. ' ' .. matches[2])
-else
-
-  send('fill ' .. player.vessel .. ' soup')
-  send('fill ' .. player.vessel .. ' water')
-  send('fill ' .. player.vessel .. ' clear.liquid')
-  
-end</script>
-			<triggerType>0</triggerType>
-			<conditonLineDelta>0</conditonLineDelta>
-			<mStayOpen>0</mStayOpen>
-			<mCommand></mCommand>
-			<packageName></packageName>
-			<mFgColor>#ff0000</mFgColor>
-			<mBgColor>#ffff00</mBgColor>
-			<mSoundFile></mSoundFile>
-			<colorTriggerFgColor>#000000</colorTriggerFgColor>
-			<colorTriggerBgColor>#000000</colorTriggerBgColor>
-			<regexCodeList>
-				<string>^.* tells? (?:the|your) group[^:]*:\s+"refill ?(.*)"$</string>
-				<string>^.* reports? group status: "refill ?(.*)"</string>
-			</regexCodeList>
-			<regexCodePropertyList>
-				<integer>1</integer>
-				<integer>1</integer>
-			</regexCodePropertyList>
-		</Trigger>
-		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>khiren - hidden</name>
 			<script>expandAlias('unhide')
 send('yell khiren')</script>
@@ -231,7 +198,7 @@ send('queue cast landwalk &amp; cast landbinding')</script>
     ['5117'] = true,
     ['5113'] = true,
     ['3817'] = true,
-    ['5880'] = true, -- using snakeskins for resist = no hiding
+    -- ['5880'] = true, -- using snakeskins for resist = no hiding
   }
   
   
@@ -253,26 +220,17 @@ send('queue cast landwalk &amp; cast landbinding')</script>
     
     if catalog.isWearing('snakeskin bracer of elemental resistance') then
       cantHide = true
-    end
     
-    if (player.gear.feet and player.gear.feet.base and player.gear.feet.base.item == 'ivory boots') then
+    elseif catalog.isWearing({'snakeskin bracer of elemental resistance', 'rune-inscripted snakeskin bracer'}) then
       cantHide = true
-    end
-    
-    if (player.gear.body and player.gear.body.over and 
-      (player.gear.body.over.item == 'cloak of flames' or player.gear.body.over.item == 'engemmed fiery red cloak')
-    ) then
+   
+    elseif catalog.isWearing({'ivory boots'}) then
       cantHide = true
-    end
-    
-    if (player.gear["right wrist"] and player.gear["right wrist"].base and player.gear["right wrist"].base.item == "rune-inscripted snakeskin bracer") then
+
+    elseif catalog.isWearing({'engemmed fiery red cloak', 'cloak of flames'}) then
       cantHide = true
-    end  
-    
-    if (player.gear["left wrist"] and player.gear["left wrist"].base and player.gear["left wrist"].base.item == "rune-inscripted snakeskin bracer") then
-      cantHide = true
-    end  
-    
+    end    
+
     if (gmcp.Char.Status.position == 'sleeping' or
         gmcp.Char.Status.position == 'wading' or
         gmcp.Char.Status.position == 'resting' or
@@ -860,12 +818,13 @@ end</script>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 				<name>storm interrupted</name>
-				<script>if (player.stormEnabled) then
+				<script>local target = matches[2]
+
+if (player.stormEnabled) then
   
   player.ss.casting = false
-  player.ss.storm_active = false
   cecho('&lt;green&gt; &lt;-- &lt;white&gt; ss disrupt')
-  raiseEvent(player.ss.events.STORM_ENDED)
+  player.ss.cast()
   
 end
 </script>
@@ -1146,8 +1105,8 @@ end</script>
 
 expandAlias('xerotes')
 
-player.prepFree(function()
-  send('gstat ready (' .. player.name .. ')')
+druid.prepFree(function()
+  send('|gstat ready (' .. player.name .. ')')
 end)
 </script>
 			<triggerType>0</triggerType>
@@ -1173,7 +1132,7 @@ end)
 		</Trigger>
 		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>get full</name>
-			<script>player.getFull(function()
+			<script>druid.getFull(function()
   send('gstat ready (' .. player.name .. ')')
 end)
 
@@ -1747,7 +1706,10 @@ end)</script>
 			<name>^prepFull</name>
 			<script>local cmd = matches[2]
 
-druid.getFull()</script>
+druid.getFull(function()
+  expandAlias('gstat ready (' .. player.name .. ')')
+end)
+</script>
 			<command></command>
 			<packageName></packageName>
 			<regex>^(pfull|prepFull)\s?(.*)$</regex>
@@ -2342,7 +2304,7 @@ druid.getFull = function (callback)
           druid.prepFree(function ()
           
             player.gettingFull = nil
-            expandAlias('gstat ready (' .. player.name .. ')')
+            -- expandAlias('gstat ready (' .. player.name .. ')')
             -- druid.reportMana()
             
             if (callback) then callback() end
@@ -2411,12 +2373,12 @@ player.postStormCheck = function(cb, options)
   end
 
   local execCallback = function()
+    player.sscb = player.sscb or {}
     player.pendingPostStormCheck = nil
     for idx, fn in ipairs(player.sscb) do
       fn()
     end
-    player.sscb = nil
-    
+    player.sscb = nil    
   end
 
   if (player.pendingPostStormCheck ~= nil) then  
@@ -2655,9 +2617,21 @@ druid.castHeal = function(options)
       callback = function()
         resolveCallbacks()
       end,
-      failCallback = function()
-        cecho('\n&lt;red&gt;DRUID:&lt;white&gt; failed to cast ' .. player.healSpell .. ', trying again in 5s\n')
-        retry()
+      failCallback = function(reason)
+      -- display(reason, 'wtf')
+        if (reason == 'cast failed due to combat') then
+          if (options.cancelOnCombat) then
+            cecho('\n&lt;green&gt;DRUID:&lt;white&gt; failed to cast ' .. player.healSpell .. ' due to combat, skipping\n')
+          else
+            cecho('\n&lt;red&gt;DRUID:&lt;white&gt; failed to cast ' .. player.healSpell .. ', trying again after combat\n')
+            common.onNextEvent(common.events.COMBAT_ENDED, function()
+              druid.castHeal(options)
+            end)
+          end
+       else
+          cecho('\n&lt;red&gt;DRUID:&lt;white&gt; failed to cast ' .. player.healSpell .. ', trying again in 5s\n')
+          retry()
+        end
       end
     
     })
@@ -2690,7 +2664,6 @@ end
 druid.healCombatFail = function()
   cecho('&lt;green&gt; &lt;-- heal failed (combat)\n')
   druid.healState.casting = nil
-  common.onNextEvent(common.events.COMBAT_ENDED, druid.castHeal)
 end
 
 
