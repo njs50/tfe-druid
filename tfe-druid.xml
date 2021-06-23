@@ -690,6 +690,68 @@ end
 					<integer>1</integer>
 				</regexCodePropertyList>
 			</Trigger>
+			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+				<name>healer commands</name>
+				<script>if (player.healingEnabled) then
+  
+  local from = matches[2]
+  
+  local chan = matches[3]
+  
+  local target = matches[4]
+  
+  if chan == 'tell' then
+    chan = chan .. ' ' .. matches[2]
+  end
+  
+  if chan == 'tells the group' then
+    chan = 'gstat'
+  end
+  
+  if chan == 'group status' then
+    chan = 'gstat'
+  end
+  
+  
+  if (target ~= 'you' and #target &gt;= 2 and rex.match(player.name:lower(), target:lower())) then
+    target = 'you'
+  end
+    
+  if (target == 'you') then
+  
+    cecho('\n\nheal group\n\n')
+    druid.groupGetFull({
+      skipAmount = 150,
+      callback = function()  
+        send(chan .. ' group healed') 
+      end
+    })
+    
+  end
+  
+end
+</script>
+				<triggerType>0</triggerType>
+				<conditonLineDelta>1</conditonLineDelta>
+				<mStayOpen>0</mStayOpen>
+				<mCommand></mCommand>
+				<packageName></packageName>
+				<mFgColor>#ff0000</mFgColor>
+				<mBgColor>#ffff00</mBgColor>
+				<mSoundFile></mSoundFile>
+				<colorTriggerFgColor>#000000</colorTriggerFgColor>
+				<colorTriggerBgColor>#000000</colorTriggerBgColor>
+				<regexCodeList>
+					<string>^([A-Za-z]+) (tell)s (you): "heal group"$</string>
+					<string>^(.+?) reports? (group status): "(\w+) heal group"</string>
+					<string>^(.+?) (tells? the group): "(\w+) heal group"$</string>
+				</regexCodeList>
+				<regexCodePropertyList>
+					<integer>1</integer>
+					<integer>1</integer>
+					<integer>1</integer>
+				</regexCodePropertyList>
+			</Trigger>
 		</TriggerGroup>
 		<TriggerGroup isActive="yes" isFolder="yes" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
 			<name>druid - storm</name>
@@ -2709,6 +2771,40 @@ druid.makeItRain = function(options)
   end
   
   druid.castHeal(options)
+
+
+end
+
+
+druid.healGroup = function(options)
+
+  options = options or {}
+  
+  options.skipAmount = options.skipAmount or 100
+  options.callback = options.callback or function() end
+  
+  canSkip = true
+  
+
+  for name in pairs(group.members) do 
+    if (
+      ((group.data[name].hp_max - group.data[name].hp) &gt; options.skipAmount) or
+      (group.data[name].hp / group.data[name].hp_max &lt; 0.6)
+    ) then
+      canSkip = false
+    end
+    cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; ' .. name .. ' is ' .. tostring(group.data[name].hp) .. ' of ' .. tostring(group.data[name].hp_max) .. 'hp!\n')
+  end
+
+  -- going to keep casting heals til we can skip healing
+  if not canSkip then
+    druid.castHeal({callback = function()
+      druid.groupGetFull(options)
+    end})  
+  else
+    options.callback()
+  end
+  -- 
 
 
 end</script>
