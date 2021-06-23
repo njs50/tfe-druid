@@ -691,7 +691,7 @@ end
 				</regexCodePropertyList>
 			</Trigger>
 			<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
-				<name>healer commands</name>
+				<name>druid healing command</name>
 				<script>if (player.healingEnabled) then
   
   local from = matches[2]
@@ -720,7 +720,7 @@ end
   if (target == 'you') then
   
     cecho('\n\nheal group\n\n')
-    druid.groupGetFull({
+    druid.healGroup({
       skipAmount = 150,
       callback = function()  
         send(chan .. ' group healed') 
@@ -2799,7 +2799,7 @@ druid.healGroup = function(options)
   -- going to keep casting heals til we can skip healing
   if not canSkip then
     druid.castHeal({callback = function()
-      druid.groupGetFull(options)
+      druid.healGroup(options)
     end})  
   else
     options.callback()
