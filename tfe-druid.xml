@@ -1659,7 +1659,11 @@ end)
 		</Alias>
 		<Alias isActive="yes" isFolder="no">
 			<name>xerotes</name>
-			<script>if player.skills.xerotes and player.skulls.xerotes &gt;= 10 and not druid.skipXerotes[gmcp.Room.Info.wind] then
+			<script>if player.skills.xerotes and 
+   player.skills.xerotes &gt;= 10 and 
+   not druid.skipXerotes[gmcp.Room.Info.wind] and
+   not player.disableXerotes
+then
   cecho('\n\n&lt;green&gt;XEROTES:&lt;white&gt; recasting xerotes as wind was: ' .. gmcp.Room.Info.wind  .. '\n\n')
   send('cast xerotes')
 end
