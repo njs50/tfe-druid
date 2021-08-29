@@ -1387,6 +1387,30 @@ resetGear()
 				<integer>1</integer>
 			</regexCodePropertyList>
 		</Trigger>
+		<Trigger isActive="yes" isFolder="no" isTempTrigger="no" isMultiline="no" isPerlSlashGOption="no" isColorizerTrigger="no" isFilterTrigger="no" isSoundTrigger="no" isColorTrigger="no" isColorTriggerFg="no" isColorTriggerBg="no">
+			<name>cast time</name>
+			<script>local startTime = getEpoch()
+timedTempTrigger(5, 1, [[^\+\+\+ You cast ]] .. matches[2] .. [[ \+\+\+]], function()
+  local castTime = math.floor((getEpoch() - startTime) * 1000)
+  cecho('&lt;green&gt; &lt;-- cast took ' .. tostring(castTime) .. 'ms')
+end)</script>
+			<triggerType>0</triggerType>
+			<conditonLineDelta>0</conditonLineDelta>
+			<mStayOpen>0</mStayOpen>
+			<mCommand></mCommand>
+			<packageName></packageName>
+			<mFgColor>#ff0000</mFgColor>
+			<mBgColor>#ffff00</mBgColor>
+			<mSoundFile></mSoundFile>
+			<colorTriggerFgColor>#000000</colorTriggerFgColor>
+			<colorTriggerBgColor>#000000</colorTriggerBgColor>
+			<regexCodeList>
+				<string>^You begin casting (.+)\.$</string>
+			</regexCodeList>
+			<regexCodePropertyList>
+				<integer>1</integer>
+			</regexCodePropertyList>
+		</Trigger>
 	</TriggerPackage>
 	<TimerPackage>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
@@ -1403,7 +1427,7 @@ expandAlias('respell')</script>
 njs50.respell(player.buffs, {queueSpellImprove = true})</script>
 			<command></command>
 			<packageName></packageName>
-			<time>00:02:00.000</time>
+			<time>00:02:30.000</time>
 		</Timer>
 		<Timer isActive="no" isFolder="no" isTempTimer="no" isOffsetTimer="no">
 			<name>cast improve spell w/tobacco for buffs</name>
@@ -1583,9 +1607,9 @@ if murder.checkNum == 0 then
   
   
   
-    if (pracs &gt; 595) then
+    if (pracs &gt; 200) then
       cecho('\n\ntoo many pracs!\n\n')
-      send('cstat got to 595 prac points, quitting for now...')
+      send('cstat got enough prac points, quitting for now...')
       send('quit')
 
       return
@@ -2618,18 +2642,48 @@ druid.healState.events.HEAL_ENDED = 'druid: heal ended'
 
 druid.onHealEnd = function(cb)
 
-  local rwatch, rewatch
+  local rwatch, rewatch, gwatch
   
   -- stop waiting for the end if we change rooms
   rwatch = registerAnonymousEventHandler(tfe.events.ROOM_CHANGED, function ()
     killAnonymousEventHandler(rewatch)
+    killAnonymousEventHandler(gwatch)
     cb()
   end, true)
   
+  -- watch for the rain/mist to run out
   rewatch = registerAnonymousEventHandler(druid.healState.events.HEAL_ENDED, function ()
     killAnonymousEventHandler(rwatch)
+    killAnonymousEventHandler(gwatch)
     cb()
   end, true)
+  
+  -- watch for the group to be full?
+  gwatch = registerAnonymousEventHandler(common.events.PARSED_GROUP, function()
+
+    local healingDone = true
+    
+    for name in pairs(group.members) do 
+      -- display(name, group[name].hp_max - group[name].hp)
+      -- require at least 60% hp
+      if (
+        ((group.data[name].hp_max - group.data[name].hp) &gt; 0) 
+      ) then
+        healingDone = false
+        cecho('\n&lt;orange&gt;DRUID:&lt;white&gt; ' .. name .. ' is ' .. tostring(group.data[name].hp) .. ' of ' .. tostring(group.data[name].hp_max) .. 'hp!\n')
+      end
+
+    end  
+    
+    if (healingDone) then
+      killAnonymousEventHandler(rewatch)
+      killAnonymousEventHandler(rwatch)
+      killAnonymousEventHandler(gwatch)
+      cb()        
+    end
+    
+  end)
+  
   
 end
 
@@ -2883,7 +2937,7 @@ druid.improveNonCombat = function(cb)
     compress = { bandage = true, cmd = 'compress self', reagent = 'a clump of herbs', level = 10 },
     poultice = { bandage = true, cmd = 'poultice self', reagent = 'a thick aloe leaf', level = 10 },
     salve = { bandage = true, cmd = 'poultice self', level = 7 },
-    ['healing mist'] = { heal = true, cmd = 'cast healing mist', level = 7 },
+    ['healing mist'] = { heal = true, cmd = 'cast healing mist', level = 10 },
     ['healing rain'] = { heal = true, cmd = 'cast healing rain', level = 10 },
     
     impede = { cmd = 'cast impede', level = 10},
